@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +36,7 @@ const TravelPlannerForm = () => {
   const [travelPlan, setTravelPlan] = useState<string>('');
   const [apiKey, setApiKey] = useState<string>('');
   const [serpApiKey, setSerpApiKey] = useState<string>('');
+  const [flightData, setFlightData] = useState<any[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -66,7 +66,6 @@ const TravelPlannerForm = () => {
     try {
       console.log('Fetching transportation details with SERP API...');
       
-      const query = `flights from ${formData.source} to ${formData.destination} ${formData.startDate}`;
       const response = await fetch(`https://serpapi.com/search.json?engine=google_flights&departure_id=${encodeURIComponent(formData.source)}&arrival_id=${encodeURIComponent(formData.destination)}&outbound_date=${formData.startDate}&return_date=${formData.endDate}&currency=USD&api_key=${serpApiKey}`);
 
       if (!response.ok) {
@@ -77,24 +76,31 @@ const TravelPlannerForm = () => {
       console.log('SERP API response:', data);
       
       if (data.best_flights && data.best_flights.length > 0) {
+        // Store flight data for the table
+        setFlightData(data.best_flights);
+        
         let transportDetails = '\n\n## Transportation Details (Live Data)\n\n';
         transportDetails += '### Available Flights:\n\n';
         
         data.best_flights.slice(0, 3).forEach((flight: any, index: number) => {
+          const flightInfo = flight.flights[0];
           transportDetails += `**Option ${index + 1}:**\n`;
           transportDetails += `- Price: $${flight.price}\n`;
           transportDetails += `- Duration: ${flight.total_duration} minutes\n`;
-          transportDetails += `- Departure: ${flight.flights?.[0]?.departure_airport?.time}\n`;
-          transportDetails += `- Arrival: ${flight.flights?.[0]?.arrival_airport?.time}\n`;
-          transportDetails += `- Airline: ${flight.flights?.[0]?.airline}\n\n`;
+          transportDetails += `- Departure: ${flightInfo.departure_airport.time}\n`;
+          transportDetails += `- Arrival: ${flightInfo.arrival_airport.time}\n`;
+          transportDetails += `- Airline: ${flightInfo.airline}\n`;
+          transportDetails += `- Flight: ${flightInfo.flight_number}\n\n`;
         });
         
         return transportDetails;
       } else {
+        setFlightData([]);
         return '\n\n## Transportation Details\n\nNo specific flight data available, but general transportation recommendations are included above.\n';
       }
     } catch (error) {
       console.error('Error fetching transportation details:', error);
+      setFlightData([]);
       toast({
         title: "Transportation Data Error",
         description: "Could not fetch live transportation data. General recommendations will be provided instead.",
@@ -380,7 +386,13 @@ Format the response in a clear, organized manner with headings and bullet points
           </CardContent>
         </Card>
 
-        {travelPlan && <TravelResults travelPlan={travelPlan} />}
+        {travelPlan && (
+          <TravelResults 
+            travelPlan={travelPlan} 
+            flightData={flightData}
+            apiKey={apiKey}
+          />
+        )}
       </div>
     </div>
   );
