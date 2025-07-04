@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Plane } from 'lucide-react';
 import TravelResults from './TravelResults';
@@ -16,6 +17,7 @@ interface TravelFormData {
   budget: string;
   travelers: string;
   interests: string;
+  includeTransportation: boolean;
 }
 
 const TravelPlannerForm = () => {
@@ -27,11 +29,13 @@ const TravelPlannerForm = () => {
     endDate: '',
     budget: '',
     travelers: '',
-    interests: ''
+    interests: '',
+    includeTransportation: false
   });
   const [isLoading, setIsLoading] = useState(false);
   const [travelPlan, setTravelPlan] = useState<string>('');
   const [apiKey, setApiKey] = useState<string>('');
+  const [serpApiKey, setSerpApiKey] = useState<string>('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -39,6 +43,64 @@ const TravelPlannerForm = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      includeTransportation: checked
+    }));
+  };
+
+  const getTransportationDetails = async () => {
+    if (!serpApiKey.trim()) {
+      toast({
+        title: "SERP API Key Required",
+        description: "Please enter your SERP API key to get transportation details.",
+        variant: "destructive"
+      });
+      return '';
+    }
+
+    try {
+      console.log('Fetching transportation details with SERP API...');
+      
+      const query = `flights from ${formData.source} to ${formData.destination} ${formData.startDate}`;
+      const response = await fetch(`https://serpapi.com/search.json?engine=google_flights&departure_id=${encodeURIComponent(formData.source)}&arrival_id=${encodeURIComponent(formData.destination)}&outbound_date=${formData.startDate}&return_date=${formData.endDate}&currency=USD&api_key=${serpApiKey}`);
+
+      if (!response.ok) {
+        throw new Error(`SERP API Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('SERP API response:', data);
+      
+      if (data.best_flights && data.best_flights.length > 0) {
+        let transportDetails = '\n\n## Transportation Details (Live Data)\n\n';
+        transportDetails += '### Available Flights:\n\n';
+        
+        data.best_flights.slice(0, 3).forEach((flight: any, index: number) => {
+          transportDetails += `**Option ${index + 1}:**\n`;
+          transportDetails += `- Price: $${flight.price}\n`;
+          transportDetails += `- Duration: ${flight.total_duration} minutes\n`;
+          transportDetails += `- Departure: ${flight.flights?.[0]?.departure_airport?.time}\n`;
+          transportDetails += `- Arrival: ${flight.flights?.[0]?.arrival_airport?.time}\n`;
+          transportDetails += `- Airline: ${flight.flights?.[0]?.airline}\n\n`;
+        });
+        
+        return transportDetails;
+      } else {
+        return '\n\n## Transportation Details\n\nNo specific flight data available, but general transportation recommendations are included above.\n';
+      }
+    } catch (error) {
+      console.error('Error fetching transportation details:', error);
+      toast({
+        title: "Transportation Data Error",
+        description: "Could not fetch live transportation data. General recommendations will be provided instead.",
+        variant: "destructive"
+      });
+      return '';
+    }
   };
 
   const generateTravelPlan = async () => {
@@ -60,9 +122,23 @@ const TravelPlannerForm = () => {
       return;
     }
 
+    if (formData.includeTransportation && !serpApiKey.trim()) {
+      toast({
+        title: "SERP API Key Required",
+        description: "Please enter your SERP API key to include transportation details.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     try {
+      let transportationDetails = '';
+      if (formData.includeTransportation) {
+        transportationDetails = await getTransportationDetails();
+      }
+
       const prompt = `Create a detailed travel plan with the following information:
       
 Source: ${formData.source}
@@ -110,7 +186,7 @@ Format the response in a clear, organized manner with headings and bullet points
       console.log('Gemini API response:', data);
       
       if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-        const generatedPlan = data.candidates[0].content.parts[0].text;
+        const generatedPlan = data.candidates[0].content.parts[0].text + transportationDetails;
         setTravelPlan(generatedPlan);
         toast({
           title: "Travel Plan Generated!",
@@ -158,6 +234,38 @@ Format the response in a clear, organized manner with headings and bullet points
               <p className="text-xs text-yellow-700 mt-1">
                 Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="underline">Google AI Studio</a>
               </p>
+            </div>
+
+            {/* Transportation Details Checkbox */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center space-x-2 mb-3">
+                <Checkbox
+                  id="includeTransportation"
+                  checked={formData.includeTransportation}
+                  onCheckedChange={handleCheckboxChange}
+                />
+                <Label htmlFor="includeTransportation" className="text-sm font-semibold text-blue-800">
+                  Include Live Transportation Details
+                </Label>
+              </div>
+              {formData.includeTransportation && (
+                <>
+                  <Label htmlFor="serpApiKey" className="text-sm font-semibold text-blue-800">
+                    SERP API Key (Required for Transportation Details)
+                  </Label>
+                  <Input
+                    id="serpApiKey"
+                    type="password"
+                    value={serpApiKey}
+                    onChange={(e) => setSerpApiKey(e.target.value)}
+                    placeholder="Enter your SERP API key"
+                    className="mt-2 border-blue-300 focus:border-blue-500"
+                  />
+                  <p className="text-xs text-blue-700 mt-1">
+                    Get your API key from <a href="https://serpapi.com/" target="_blank" rel="noopener noreferrer" className="underline">SERP API</a>
+                  </p>
+                </>
+              )}
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
