@@ -1,73 +1,89 @@
-# Welcome to your Lovable project
-
-## Project info
-
-**URL**: https://lovable.dev/projects/2d6e52e5-a6a8-4f4b-a02a-d4cc3b93ae31
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/2d6e52e5-a6a8-4f4b-a02a-d4cc3b93ae31) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
+Travel Planner
+Welcome to the Travel Planner project! This is a web application built to help users create personalized travel itineraries using AI-powered APIs and real-time flight data.
+Project Info
+Git Repository: (Replace with your actual Git repository URL, e.g., https://github.com/username/travel-planner)
+How to Edit This Code
+There are several ways to edit your application code:
+Use Your Preferred IDE
+To work locally using your favorite IDE, clone the repository and push changes as needed. You'll need Node.js and npm installed. We recommend using nvm to manage Node.js versions.
 Follow these steps:
-
-```sh
 # Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
 
 # Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+cd travel-planner
 
 # Step 3: Install the necessary dependencies.
 npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+Edit a File Directly in GitHub
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Navigate to the desired file in your repository.
+Click the "Edit" button (pencil icon) at the top right of the file view.
+Make your changes and commit them with a descriptive message.
 
-**Use GitHub Codespaces**
+Use GitHub Codespaces
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Go to the main page of your repository on GitHub.
+Click the "Code" button (green button) near the top right.
+Select the "Codespaces" tab.
+Click "New codespace" to launch a cloud-based development environment.
+Edit files within Codespaces and commit and push your changes when done.
 
-## What technologies are used for this project?
+Environment Variables
+The application requires the following environment variables to be set in a .env file in the project root:
+VITE_GEMINI_API_KEY=your-gemini-api-key-here
+VITE_SERP_API_KEY=your-serp-api-key-here
 
+
+VITE_GEMINI_API_KEY: Required for generating travel plans using the Gemini API. Obtain it from Google AI Studio.
+VITE_SERP_API_KEY: Required for fetching live flight data. Obtain it from SERP API.
+
+Ensure the .env file is added to .gitignore to keep sensitive API keys secure.
+Technologies Used
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Vite: A fast build tool and development server for modern web projects.
+TypeScript: Adds static typing to JavaScript for better developer experience and code reliability.
+React: A JavaScript library for building user interfaces.
+shadcn-ui: A collection of reusable UI components for React.
+Tailwind CSS: A utility-first CSS framework for styling.
 
-## How can I deploy this project?
+How to Deploy This Project
+To deploy the project, you can use a platform like Vercel, Netlify, or any other static site hosting service that supports Vite-based applications. Follow these general steps:
 
-Simply open [Lovable](https://lovable.dev/projects/2d6e52e5-a6a8-4f4b-a02a-d4cc3b93ae31) and click on Share -> Publish.
+Build the project for production:npm run build
 
-## Can I connect a custom domain to my Lovable project?
 
-Yes, you can!
+Deploy the contents of the dist folder to your hosting platform of choice.
+Configure your environment variables (VITE_GEMINI_API_KEY and VITE_SERP_API_KEY) in the hosting platform's environment settings.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Refer to your hosting provider's documentation for specific deployment instructions.
+Connecting a Custom Domain
+To connect a custom domain to your deployed project, check your hosting platform's domain management settings. Typically, this involves:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Adding your custom domain in the hosting platform's dashboard.
+Updating your domain's DNS settings to point to the hosting provider (e.g., setting up A records or CNAME records).
+Verifying domain ownership, if required.
+
+Consult your hosting provider's documentation for detailed instructions on custom domain setup.
+Screenshots
+(Add your screenshots here with descriptions, e.g.,)
+
+Home Page: Displays the travel planner form for inputting travel preferences.
+![image](https://github.com/user-attachments/assets/e4a56ff8-b324-4942-b522-3e9da554ea57)
+
+Travel Results: Shows the generated itinerary and flight data.
+![image](https://github.com/user-attachments/assets/bddd76a8-9a67-4def-a90c-f6d42d6ec35f)
+
+/////////
+![image](https://github.com/user-attachments/assets/f309117c-641a-4c00-aa69-c0be50a51751)
+
+////////
+![image](https://github.com/user-attachments/assets/871515bc-492d-4b8b-b295-edfc61aae4be)
+
+
+
