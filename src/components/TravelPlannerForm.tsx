@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { airplane } from 'lucide-react';
+import { Plane } from 'lucide-react';
 import TravelResults from './TravelResults';
 
 interface TravelFormData {
@@ -264,7 +263,7 @@ Format the response in a clear, organized manner with headings and bullet points
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">
-                  <airplane className="w-5 h-5" />
+                  <Plane className="w-5 h-5" />
                   <span>Generate Travel Plan</span>
                 </div>
               )}

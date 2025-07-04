@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { map } from 'lucide-react';
+import { Map } from 'lucide-react';
 
 interface TravelResultsProps {
   travelPlan: string;
@@ -48,7 +48,7 @@ const TravelResults: React.FC<TravelResultsProps> = ({ travelPlan }) => {
     <Card className="mt-8 shadow-2xl border-0 bg-gradient-to-br from-white to-blue-50">
       <CardHeader className="text-center border-b bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg">
         <div className="flex justify-center mb-2">
-          <map className="w-8 h-8" />
+          <Map className="w-8 h-8" />
         </div>
         <CardTitle className="text-2xl font-bold">
           Your Personalized Travel Plan

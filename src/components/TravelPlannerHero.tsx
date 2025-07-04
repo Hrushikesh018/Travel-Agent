@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { airplane, map, users, calendar } from 'lucide-react';
+import { Plane, Map, Users, Calendar } from 'lucide-react';
 
 const TravelPlannerHero = () => {
   return (
@@ -9,7 +9,7 @@ const TravelPlannerHero = () => {
       <div className="relative container mx-auto px-6 py-20 text-center">
         <div className="flex justify-center mb-6">
           <div className="p-4 bg-white/20 rounded-full backdrop-blur-sm">
-            <airplane className="w-12 h-12" />
+            <Plane className="w-12 h-12" />
           </div>
         </div>
         <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
@@ -20,15 +20,15 @@ const TravelPlannerHero = () => {
         </p>
         <div className="flex justify-center items-center space-x-8 text-sm">
           <div className="flex items-center space-x-2">
-            <map className="w-5 h-5" />
+            <Map className="w-5 h-5" />
             <span>Smart Itineraries</span>
           </div>
           <div className="flex items-center space-x-2">
-            <users className="w-5 h-5" />
+            <Users className="w-5 h-5" />
             <span>Group Planning</span>
           </div>
           <div className="flex items-center space-x-2">
-            <calendar className="w-5 h-5" />
+            <Calendar className="w-5 h-5" />
             <span>Date Optimization</span>
           </div>
         </div>
